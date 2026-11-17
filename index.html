@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lessen in Terrassa – lente 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,650;12..96,800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #EEF1F8;
+    --panel: #FFFFFF;
+    --ink: #1D2340;
+    --muted: #5F6688;
+    --line: #DCE1EE;
+    --line-soft: #EBEEF6;
+
+    --b1: #2B59E0;   --b1-bg: #E3EAFF;  --b1-text: #1A3A9E;
+    --b2: #F07A12;   --b2-bg: #FFEBD6;  --b2-text: #8F4300;
+    --free: #E2B400; --free-bg: #FFF5C7;
+    --exam: #8A4FD8; --exam-bg: #EFE5FC;
+    --era: #12936A;  --era-bg: #DDF4EA;
+
+    --hour: 54px;
+    --font: "Bricolage Grotesque", ui-rounded, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: 16px;
+    line-height: 1.45;
+    font-variant-numeric: tabular-nums;
+  }
+  button { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid var(--b1); outline-offset: 2px; border-radius: 6px; }
+
+  .page { max-width: 1320px; margin: 0 auto; padding: 32px 28px 56px; }
+
+  /* ---------- top ---------- */
+  .top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 20px 32px; }
+  h1 {
+    margin: 0;
+    font-size: clamp(34px, 5vw, 56px);
+    font-weight: 800;
+    font-variation-settings: "opsz" 96;
+    letter-spacing: -0.03em;
+    line-height: .95;
+  }
+  .lede { margin: 10px 0 0; color: var(--muted); font-size: 17px; }
+
+  .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .seg {
+    display: inline-flex; padding: 4px; gap: 4px;
+    background: var(--panel); border: 1.5px solid var(--line); border-radius: 14px;
+  }
+  .seg button {
+    border: 0; background: none; cursor: pointer;
+    padding: 8px 16px; border-radius: 10px; font-weight: 500; color: var(--muted);
+  }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+  .seg button:not([aria-pressed="true"]):hover { color: var(--ink); background: var(--line-soft); }
+
+  .nav { display: inline-flex; gap: 6px; }
+  .btn {
+    border: 1.5px solid var(--line); background: var(--panel); cursor: pointer;
+    height: 44px; min-width: 44px; padding: 0 14px; border-radius: 12px; font-weight: 500;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .btn:hover:not(:disabled) { border-color: var(--ink); }
+  .btn:disabled { opacity: .35; cursor: not-allowed; }
+  .btn svg { width: 18px; height: 18px; }
+
+  /* ---------- semester line ---------- */
+  .line-wrap {
+    margin: 30px 0 26px;
+    background: var(--panel);
+    border-radius: 22px;
+    padding: 18px 26px 20px;
+    border: 1.5px solid var(--line);
+  }
+  .line-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; align-items: baseline; }
+  .line-head h2 { margin: 0; font-size: 17px; font-weight: 650; }
+  .key { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--muted); }
+  .key span { display: inline-flex; align-items: center; gap: 6px; }
+  .key i { width: 12px; height: 12px; border-radius: 4px; display: inline-block; }
+
+  .track {
+    position: relative; height: 112px; margin-top: 8px; cursor: pointer;
+    touch-action: manipulation;
+  }
+  .rail { position: absolute; left: 0; right: 0; top: 52px; height: 4px; background: var(--ink); border-radius: 2px; }
+  .stop {
+    position: absolute; top: 46px; width: 16px; height: 16px; margin-left: -8px;
+    border-radius: 50%; background: var(--panel); border: 4px solid var(--ink);
+  }
+  .month-btn {
+    position: absolute; top: 18px; transform: translateX(-2px);
+    border: 0; background: none; padding: 2px 4px; cursor: pointer;
+    font-weight: 650; font-size: 15px;
+  }
+  .month-btn:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .era-bar {
+    position: absolute; top: 40px; height: 3px; background: var(--era); border-radius: 2px;
+  }
+  .band {
+    position: absolute; top: 66px; height: 26px; border-radius: 8px;
+    font-size: 12px; font-weight: 650; padding: 4px 8px; white-space: nowrap; overflow: hidden;
+    border: 1.5px solid;
+  }
+  .band.b1 { background: var(--b1-bg); border-color: var(--b1); color: var(--b1-text); }
+  .band.b2 { background: var(--b2-bg); border-color: var(--b2); color: var(--b2-text); }
+  .band.free { background: var(--free-bg); border-color: var(--free); color: #6b5500; top: 66px; z-index: 2; }
+  .band.exam { background: var(--exam-bg); border-color: var(--exam); color: #4b2690; }
+
+  .window {
+    position: absolute; top: 34px; height: 64px; border-radius: 12px;
+    background: rgba(43, 89, 224, .07);
+    border: 2px dashed var(--ink);
+    pointer-events: none;
+    transition: left .55s cubic-bezier(.5, 0, .2, 1), width .55s cubic-bezier(.5, 0, .2, 1);
+    z-index: 3;
+  }
+  .rocket {
+    position: absolute; top: -30px; left: 50%; width: 30px; height: 30px; margin-left: -15px;
+    color: var(--b2);
+  }
+  .window.fly .rocket { animation: lift .55s ease-out; }
+  @keyframes lift {
+    0% { transform: translateY(0) rotate(0); }
+    40% { transform: translateY(-8px) rotate(var(--tilt, 12deg)); }
+    100% { transform: translateY(0) rotate(0); }
+  }
+
+  /* ---------- period heading ---------- */
+  .period { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; margin: 0 4px 12px; }
+  .period h2 { margin: 0; font-size: clamp(24px, 3vw, 32px); font-weight: 800; letter-spacing: -0.02em; }
+  .period .count { color: var(--muted); font-size: 16px; }
+
+  .board {
+    background: var(--panel);
+    border-radius: 22px;
+    border: 1.5px solid var(--line);
+    overflow: hidden;
+  }
+
+  /* ---------- week view ---------- */
+  .wk-scroll { overflow-x: auto; }
+  .wk { min-width: 680px; display: grid; grid-template-columns: 60px repeat(5, 1fr); }
+  .wk-head {
+    padding: 14px 10px 10px; border-left: 1px solid var(--line-soft);
+    border-bottom: 1.5px solid var(--line);
+  }
+  .wk-head:first-child { border-left: 0; }
+  .wk-head .dname { color: var(--muted); font-size: 14px; }
+  .wk-head .dnum { font-size: 26px; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; }
+  .wk-head .dnum small { font-size: 14px; font-weight: 500; color: var(--muted); letter-spacing: 0; margin-left: 4px; }
+  .wk-head.today .dnum { color: var(--b1); }
+  .wk-head.out, .wk-day.out { background: repeating-linear-gradient(135deg, transparent 0 7px, var(--line-soft) 7px 9px); }
+  .wk-head.out .dnum { color: var(--muted); }
+
+  .allday {
+    min-height: 40px; padding: 6px; border-left: 1px solid var(--line-soft);
+    border-bottom: 1.5px solid var(--line); display: flex; flex-direction: column; gap: 4px;
+  }
+  .allday:first-child { border-left: 0; }
+  .tag {
+    font-size: 12px; font-weight: 500; line-height: 1.25;
+    padding: 3px 7px; border-radius: 6px; border-left: 4px solid;
+  }
+  .tag.free { background: var(--free-bg); border-color: var(--free); }
+  .tag.exam { background: var(--exam-bg); border-color: var(--exam); }
+  .tag.era  { background: var(--era-bg); border-color: var(--era); }
+  .tag.mile { background: var(--line-soft); border-color: var(--ink); }
+
+  .times { position: relative; }
+  .times span { position: absolute; right: 10px; font-size: 12px; color: var(--muted); transform: translateY(-8px); }
+  .wk-day { position: relative; border-left: 1px solid var(--line-soft); }
+  .hl { position: absolute; left: 0; right: 0; border-top: 1px solid var(--line-soft); }
+  .hl.half { border-top-style: dashed; opacity: .6; }
+
+  .ev {
+    position: absolute; left: 6px; right: 6px;
+    border-radius: 12px; padding: 8px 10px 8px 12px;
+    border: 1.5px solid; overflow: hidden; font-size: 13px; line-height: 1.3;
+    display: flex; flex-direction: column; gap: 1px;
+  }
+  .ev.b1 { background: var(--b1-bg); border-color: var(--b1); color: var(--b1-text); }
+  .ev.b2 { background: var(--b2-bg); border-color: var(--b2); color: var(--b2-text); }
+  .ev .ev-top { display: flex; align-items: center; gap: 6px; font-weight: 650; font-size: 14px; }
+  .ev .ev-top svg { width: 20px; height: 20px; flex: none; }
+  .ev .ev-time { font-weight: 650; }
+  .ev .ev-sub { opacity: .85; }
+
+  .empty {
+    position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none;
+    padding: 20px;
+  }
+  .empty p {
+    margin: 0; max-width: 34ch; text-align: center; font-size: 17px; color: var(--muted);
+    background: var(--panel); padding: 14px 18px; border-radius: 14px; border: 1.5px dashed var(--line);
+    pointer-events: auto;
+  }
+  .empty button { border: 0; background: none; padding: 0; color: var(--b1); font-weight: 650; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+
+  /* ---------- month view ---------- */
+  .mo { display: grid; grid-template-columns: repeat(5, 1fr) .6fr .6fr; }
+  .mo-h { padding: 12px 10px 8px; color: var(--muted); font-size: 14px; border-bottom: 1.5px solid var(--line); }
+  .cell {
+    min-height: 118px; padding: 8px; border-top: 1px solid var(--line-soft); border-left: 1px solid var(--line-soft);
+    display: flex; flex-direction: column; gap: 4px; text-align: left;
+    background: none; border-right: 0; border-bottom: 0; cursor: pointer; font: inherit; color: inherit;
+  }
+  .cell:nth-child(7n + 1) { border-left: 0; }
+  .cell:hover:not(:disabled) { background: #F6F8FD; }
+  .cell .n { font-weight: 650; font-size: 15px; }
+  .cell.other .n { color: var(--muted); font-weight: 400; }
+  .cell.other > *:not(.n) { opacity: .55; }
+  .cell.weekend { background: #FAFBFE; }
+  .cell.today .n { background: var(--b1); color: #fff; border-radius: 8px; padding: 0 7px; align-self: flex-start; }
+  .cell:disabled { cursor: default; background: repeating-linear-gradient(135deg, transparent 0 7px, var(--line-soft) 7px 9px); }
+  .cell:disabled .n { color: var(--muted); font-weight: 400; }
+  .pill {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 12px; line-height: 1.2; padding: 3px 6px; border-radius: 7px; font-weight: 500;
+  }
+  .pill svg { width: 15px; height: 15px; flex: none; }
+  .pill.b1 { background: var(--b1-bg); color: var(--b1-text); }
+  .pill.b2 { background: var(--b2-bg); color: var(--b2-text); }
+  .cell .tag { font-size: 11px; padding: 2px 6px; }
+
+  /* ---------- courses ---------- */
+  .courses { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 26px; }
+  .course {
+    display: grid; grid-template-columns: 64px 1fr; gap: 16px; align-items: start;
+    padding: 20px 22px; border-radius: 20px; border: 1.5px solid;
+  }
+  .course.b1 { background: var(--b1-bg); border-color: var(--b1); }
+  .course.b2 { background: var(--b2-bg); border-color: var(--b2); }
+  .course .ico { width: 64px; height: 64px; }
+  .course.b1 .ico { color: var(--b1); }
+  .course.b2 .ico { color: var(--b2); }
+  .course h3 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.15; }
+  .course p { margin: 4px 0 0; font-size: 15px; }
+  .course .when { color: var(--muted); }
+  .course ul { margin: 10px 0 0; padding: 0; list-style: none; font-size: 15px; }
+  .course li { display: flex; gap: 10px; }
+  .course li b { min-width: 74px; font-weight: 650; }
+
+  .foot { margin-top: 22px; font-size: 14px; color: var(--muted); max-width: 72ch; }
+  kbd { font-family: inherit; font-size: 13px; border: 1.5px solid var(--line); border-bottom-width: 3px; border-radius: 6px; padding: 0 6px; background: var(--panel); }
+
+  @media (max-width: 760px) {
+    .page { padding: 20px 14px 40px; }
+    .line-wrap { padding: 14px 14px 16px; }
+    .band:not(.b1):not(.b2) { color: transparent; }
+    .mo { grid-template-columns: repeat(5, 1fr) .45fr .45fr; }
+    .cell { min-height: 74px; padding: 5px; }
+    .pill span, .cell .tag { display: none; }
+    .pill { padding: 3px; justify-content: center; }
+    .cell .tag.dot { display: block; height: 5px; padding: 0; border-left: 0; border-radius: 3px; font-size: 0; }
+    .course { grid-template-columns: 48px 1fr; padding: 16px; }
+    .course .ico { width: 48px; height: 48px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .window { transition: none; }
+    .window.fly .rocket { animation: none; }
+  }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <div class="top">
+    <div>
+      <h1>Lessen in Terrassa</h1>
+      <p class="lede">Mijn Erasmussemester aan de ESEIAAT, februari tot juni 2027</p>
+    </div>
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Weergave">
+        <button type="button" data-view="week">Week</button>
+        <button type="button" data-view="month">Maand</button>
+      </div>
+      <div class="nav">
+        <button class="btn" type="button" id="prev" aria-label="Vorige">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+        <button class="btn" type="button" id="next" aria-label="Volgende">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <button class="btn" type="button" id="home"></button>
+      </div>
+    </div>
+  </div>
+
+  <section class="line-wrap" aria-label="Semesterlijn">
+    <div class="line-head">
+      <h2>Het semester in één lijn</h2>
+      <div class="key">
+        <span><i style="background:var(--b1)"></i>B1</span>
+        <span><i style="background:var(--b2)"></i>B2</span>
+        <span><i style="background:var(--free)"></i>Vrij</span>
+        <span><i style="background:var(--exam)"></i>Examens</span>
+        <span><i style="background:var(--era)"></i>Erasmus 15 feb tot 15 jun</span>
+      </div>
+    </div>
+    <div class="track" id="track" title="Klik om naar die datum te springen"></div>
+  </section>
+
+  <div class="period">
+    <h2 id="title"></h2>
+    <span class="count" id="count"></span>
+  </div>
+  <section class="board" id="board" aria-live="polite"></section>
+
+  <section class="courses" id="courses" aria-label="Vakken"></section>
+
+  <p class="foot">
+    Data uit de officiële ESEIAAT-bachelorkalender 2026-2027. Lessen op vrije dagen zijn al weggelaten.
+    Sneltoetsen: <kbd>←</kbd> <kbd>→</kbd> navigeren, <kbd>W</kbd> week, <kbd>M</kbd> maand.
+  </p>
+</main>
+
+<script>
+/* =========================================================
+   DATA: pas hier je vakken en kalender aan.
+   day: 1 = maandag … 5 = vrijdag
+   ========================================================= */
+const COURSES = [
+  {
+    id: "b1", code: "205241", short: "AVP", name: "Autonomous vehicle programming",
+    period: "B1", from: "2027-02-22", to: "2027-04-12", icon: "car",
+    sessions: [
+      { day: 1, start: "10:00", end: "12:00", type: "theorie", group: 1 },
+      { day: 3, start: "16:00", end: "19:00", type: "theorie", group: 1 }
+    ]
+  },
+  {
+    id: "b2", code: "205203", short: "Rockets", name: "Introduction to Rockets",
+    period: "B2", from: "2027-04-22", to: "2027-06-04", icon: "rocket",
+    sessions: [
+      { day: 1, start: "18:00", end: "20:00", type: "theorie", group: 1 },
+      { day: 4, start: "17:00", end: "20:00", type: "theorie", group: 1 }
+    ]
+  }
+];
+
+// Dagen zonder les (ESEIAAT-kalender lente 2027)
+const NO_CLASS = [
+  ["2027-03-22", "2027-03-29"],  // paasvakantie
+  ["2027-05-13", "2027-05-14"]   // Campus Day + vrije vrijdag
+];
+
+// kind: free | exam | era | mile
+const MARKS = [
+  { from: "2027-02-08", to: "2027-02-12", label: "Introductiecursussen", kind: "mile" },
+  { from: "2027-02-15", to: "2027-02-15", label: "Start Erasmus en lessen", kind: "era" },
+  { from: "2027-02-22", to: "2027-02-22", label: "Start B1", kind: "mile" },
+  { from: "2027-03-22", to: "2027-03-29", label: "Paasvakantie", kind: "free" },
+  { from: "2027-04-12", to: "2027-04-12", label: "Laatste les B1", kind: "mile" },
+  { from: "2027-04-13", to: "2027-04-21", label: "Tussentijdse examens", kind: "exam" },
+  { from: "2027-04-22", to: "2027-04-22", label: "Start B2", kind: "mile" },
+  { from: "2027-05-13", to: "2027-05-13", label: "Campus Day, geen les", kind: "free" },
+  { from: "2027-05-14", to: "2027-05-14", label: "Geen les", kind: "free" },
+  { from: "2027-06-04", to: "2027-06-04", label: "Laatste lesdag", kind: "mile" },
+  { from: "2027-06-07", to: "2027-06-18", label: "Eindexamens", kind: "exam" },
+  { from: "2027-06-15", to: "2027-06-15", label: "Einde Erasmus", kind: "era" },
+  { from: "2027-06-21", to: "2027-06-21", label: "Herkansing bimestervakken", kind: "exam" },
+  { from: "2027-06-24", to: "2027-06-24", label: "Sint-Jan, feestdag", kind: "free" },
+  { from: "2027-06-25", to: "2027-06-25", label: "Punten op Atenea", kind: "mile" }
+];
+
+// Banden op de semesterlijn
+const BANDS = [
+  { from: "2027-02-22", to: "2027-04-12", label: "B1", cls: "b1" },
+  { from: "2027-03-22", to: "2027-03-29", label: "Pasen", cls: "free" },
+  { from: "2027-04-13", to: "2027-04-21", label: "Examens", cls: "exam" },
+  { from: "2027-04-22", to: "2027-06-04", label: "B2", cls: "b2" },
+  { from: "2027-06-07", to: "2027-06-18", label: "Examens", cls: "exam" }
+];
+const ERASMUS = ["2027-02-15", "2027-06-15"];
+
+const RANGE = { from: "2027-02-01", to: "2027-06-30" };
+const HOURS = { start: 8, end: 21 };
+
+/* ========================================================= */
+const ICONS = {
+  car: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M10 40v-8l6-12h32l6 12v8a3 3 0 0 1-3 3H13a3 3 0 0 1-3-3z" fill="currentColor" fill-opacity=".15"/>
+          <path d="M16 32h32"/><circle cx="20" cy="44" r="5" fill="#fff"/><circle cx="44" cy="44" r="5" fill="#fff"/>
+          <path d="M32 20v-7"/><circle cx="32" cy="10" r="3" fill="currentColor"/>
+          <path d="M24 7c-2 2-2 4 0 6M40 7c2 2 2 4 0 6"/>
+        </svg>`,
+  rocket: `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M32 6c8 7 11 17 10 30H22C21 23 24 13 32 6z" fill="currentColor" fill-opacity=".15"/>
+          <circle cx="32" cy="23" r="5" fill="#fff"/>
+          <path d="M22 30l-8 9v6l9-4M42 30l8 9v6l-9-4"/>
+          <path d="M27 42c0 6 2 10 5 14 3-4 5-8 5-14"/>
+        </svg>`
+};
+
+const DAY_SHORT = ["zo", "ma", "di", "wo", "do", "vr", "za"];
+const DAY_LONG = ["zondag", "maandag", "dinsdag", "woensdag", "donderdag", "vrijdag", "zaterdag"];
+const MONTHS = ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"];
+const MONTH_SHORT = ["jan", "feb", "mrt", "apr", "mei", "jun", "jul", "aug", "sep", "okt", "nov", "dec"];
+
+const D = s => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+const key = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const addDays = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+const monday = d => addDays(d, -((d.getDay() + 6) % 7));
+const inside = (d, a, b) => key(d) >= a && key(d) <= b;
+const toMin = t => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
+const isoWeek = d => {
+  const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const day = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - day);
+  const y0 = new Date(Date.UTC(t.getUTCFullYear(), 0, 1));
+  return Math.ceil(((t - y0) / 864e5 + 1) / 7);
+};
+const fmtHours = m => { const h = m / 60; return (Number.isInteger(h) ? h : h.toFixed(1).replace(".", ",")) + (h === 1 ? " uur" : " uur"); };
+
+const R0 = D(RANGE.from), R1 = D(RANGE.to);
+const MIN_WEEK = monday(R0), MAX_WEEK = monday(R1);
+const FIRST_MONTH = R0.getMonth(), LAST_MONTH = R1.getMonth();
+const inRange = d => inside(d, RANGE.from, RANGE.to);
+const noClass = d => NO_CLASS.some(([a, b]) => inside(d, a, b));
+
+function lessonsOn(d) {
+  if (!inRange(d) || noClass(d)) return [];
+  const out = [];
+  COURSES.forEach(c => {
+    if (!inside(d, c.from, c.to)) return;
+    c.sessions.forEach(s => { if (s.day === d.getDay()) out.push({ c, s }); });
+  });
+  return out.sort((a, b) => toMin(a.s.start) - toMin(b.s.start));
+}
+const marksOn = d => {
+  const weekend = d.getDay() === 0 || d.getDay() === 6;
+  return MARKS.filter(m => inside(d, m.from, m.to) && !(weekend && m.from !== m.to));
+};
+
+function nextLessonAfter(d) {
+  for (let x = addDays(d, 1); x <= R1; x = addDays(x, 1)) {
+    const l = lessonsOn(x); if (l.length) return { date: x, lesson: l[0] };
+  }
+  return null;
+}
+
+/* ---------- state ---------- */
+const TODAY = new Date(); TODAY.setHours(0, 0, 0, 0);
+const TODAY_IN = inRange(TODAY);
+const START_DATE = TODAY_IN ? TODAY : D("2027-02-15");
+
+let state = { view: "week", cursor: START_DATE };
+try {
+  const saved = JSON.parse(localStorage.getItem("terrassa-agenda") || "null");
+  if (saved && (saved.view === "week" || saved.view === "month")) {
+    state.view = saved.view;
+    const c = D(saved.cursor); if (inRange(c)) state.cursor = c;
+  }
+} catch (e) {}
+const save = () => { try { localStorage.setItem("terrassa-agenda", JSON.stringify({ view: state.view, cursor: key(state.cursor) })); } catch (e) {} };
+
+const firstWeekday = (y, m) => { let d = new Date(y, m, 1); while (d.getDay() === 0 || d.getDay() === 6) d = addDays(d, 1); return d; };
+
+function move(dir) {
+  if (state.view === "week") {
+    let w = addDays(monday(state.cursor), 7 * dir);
+    if (w < MIN_WEEK) w = MIN_WEEK; if (w > MAX_WEEK) w = MAX_WEEK;
+    state.cursor = w < R0 ? R0 : w;
+  } else {
+    let m = state.cursor.getMonth() + dir;
+    m = Math.max(FIRST_MONTH, Math.min(LAST_MONTH, m));
+    state.cursor = firstWeekday(R0.getFullYear(), m);
+  }
+  render(dir);
+}
+function jump(d, view) {
+  if (d < R0) d = R0; if (d > R1) d = R1;
+  state.cursor = d; if (view) state.view = view;
+  render(0);
+}
+
+/* ---------- semester line ---------- */
+const track = document.getElementById("track");
+const SPAN = (R1 - R0) / 864e5 + 1;
+const pct = d => ((d - R0) / 864e5) / SPAN * 100;
+const pctEnd = d => ((d - R0) / 864e5 + 1) / SPAN * 100;
+
+function buildTrack() {
+  let html = `<div class="rail"></div>`;
+  const e0 = D(ERASMUS[0]), e1 = D(ERASMUS[1]);
+  html += `<div class="era-bar" style="left:${pct(e0)}%;width:${pctEnd(e1) - pct(e0)}%"></div>`;
+  for (let m = FIRST_MONTH; m <= LAST_MONTH; m++) {
+    const d = new Date(R0.getFullYear(), m, 1);
+    html += `<span class="stop" style="left:${pct(d)}%"></span>
+      <button type="button" class="month-btn" data-month="${m}" style="left:${pct(d)}%">${MONTH_SHORT[m]}</button>`;
+  }
+  html += `<span class="stop" style="left:100%"></span>`;
+  BANDS.forEach(b => {
+    const a = D(b.from), z = D(b.to);
+    html += `<div class="band ${b.cls}" style="left:${pct(a)}%;width:${pctEnd(z) - pct(a)}%" title="${b.label}: ${a.getDate()} ${MONTH_SHORT[a.getMonth()]} tot ${z.getDate()} ${MONTH_SHORT[z.getMonth()]}">${b.label}</div>`;
+  });
+  html += `<div class="window" id="win"><span class="rocket">${ICONS.rocket}</span></div>`;
+  track.innerHTML = html;
+
+  track.addEventListener("click", e => {
+    const mb = e.target.closest(".month-btn");
+    if (mb) { e.stopPropagation(); jump(firstWeekday(R0.getFullYear(), +mb.dataset.month)); return; }
+    const r = track.getBoundingClientRect();
+    const f = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+    jump(addDays(R0, Math.floor(f * SPAN)));
+  });
+}
+
+function placeWindow(dir) {
+  const win = document.getElementById("win");
+  let a, z;
+  if (state.view === "week") { a = monday(state.cursor); z = addDays(a, 4); }
+  else { a = new Date(state.cursor.getFullYear(), state.cursor.getMonth(), 1); z = new Date(a.getFullYear(), a.getMonth() + 1, 0); }
+  if (a < R0) a = R0; if (z > R1) z = R1;
+  const l = pct(a), w = Math.max(pctEnd(z) - l, 1.6);
+  win.style.left = l + "%"; win.style.width = w + "%";
+  if (dir) {
+    win.style.setProperty("--tilt", dir > 0 ? "18deg" : "-18deg");
+    win.classList.remove("fly"); void win.offsetWidth; win.classList.add("fly");
+  }
+}
+
+/* ---------- views ---------- */
+const board = document.getElementById("board");
+
+function lessonSummary(days) {
+  let n = 0, mins = 0;
+  days.forEach(d => lessonsOn(d).forEach(({ s }) => { n++; mins += toMin(s.end) - toMin(s.start); }));
+  if (!n) return "Geen lessen";
+  return `${n} ${n === 1 ? "les" : "lessen"}, ${fmtHours(mins)}`;
+}
+
+function renderWeek() {
+  const mon = monday(state.cursor);
+  const days = [0, 1, 2, 3, 4].map(i => addDays(mon, i));
+  const fri = days[4];
+  const sameMonth = mon.getMonth() === fri.getMonth();
+  document.getElementById("title").textContent =
+    `Week ${isoWeek(mon)}, ${mon.getDate()}${sameMonth ? "" : " " + MONTHS[mon.getMonth()]} tot ${fri.getDate()} ${MONTHS[fri.getMonth()]}`;
+  document.getElementById("count").textContent = lessonSummary(days);
+
+  const H = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--hour"));
+  const total = (HOURS.end - HOURS.start) * H;
+
+  let h = `<div class="wk-scroll"><div class="wk">`;
+  h += `<div class="wk-head"></div>`;
+  days.forEach(d => {
+    const cls = [!inRange(d) && "out", key(d) === key(TODAY) && "today"].filter(Boolean).join(" ");
+    h += `<div class="wk-head ${cls}"><div class="dname">${DAY_LONG[d.getDay()]}</div>
+      <div class="dnum">${d.getDate()}<small>${MONTH_SHORT[d.getMonth()]}</small></div></div>`;
+  });
+  h += `<div class="allday"></div>`;
+  days.forEach(d => {
+    h += `<div class="allday">${marksOn(d).map(m => `<span class="tag ${m.kind}">${m.label}</span>`).join("")}</div>`;
+  });
+
+  // times
+  h += `<div class="times" style="height:${total}px">`;
+  for (let t = HOURS.start + 1; t < HOURS.end; t++) h += `<span style="top:${(t - HOURS.start) * H}px">${t}:00</span>`;
+  h += `</div>`;
+
+  let any = false;
+  days.forEach(d => {
+    h += `<div class="wk-day ${inRange(d) ? "" : "out"}" style="height:${total}px">`;
+    for (let t = HOURS.start; t < HOURS.end; t++) {
+      h += `<div class="hl" style="top:${(t - HOURS.start) * H}px"></div><div class="hl half" style="top:${(t - HOURS.start + .5) * H}px"></div>`;
+    }
+    lessonsOn(d).forEach(({ c, s }) => {
+      any = true;
+      const top = (toMin(s.start) / 60 - HOURS.start) * H + 2;
+      const ht = (toMin(s.end) - toMin(s.start)) / 60 * H - 4;
+      h += `<div class="ev ${c.id}" style="top:${top}px;height:${ht}px" title="${c.code} ${c.name}">
+        <div class="ev-top">${ICONS[c.icon]}<span>${c.short}</span></div>
+        <div class="ev-time">${s.start} tot ${s.end}</div>
+        <div class="ev-sub">${c.name}</div>
+        <div class="ev-sub">${c.code}, ${s.type}, groep ${s.group}</div>
+      </div>`;
+    });
+    h += `</div>`;
+  });
+  h += `</div></div>`;
+  board.innerHTML = h;
+
+  if (!any) {
+    const nxt = nextLessonAfter(fri);
+    const wrap = board.querySelector(".wk");
+    wrap.style.position = "relative";
+    const msg = document.createElement("div");
+    msg.className = "empty";
+    msg.style.top = "120px";
+    msg.innerHTML = nxt
+      ? `<p>Geen lessen deze week. Je volgende les is ${nxt.lesson.c.short} op ${DAY_LONG[nxt.date.getDay()]} ${nxt.date.getDate()} ${MONTHS[nxt.date.getMonth()]}. <button type="button" id="goNext">Toon die week</button></p>`
+      : `<p>Geen lessen meer dit semester. Hou de examen- en herkansingsdata hierboven in de gaten.</p>`;
+    wrap.appendChild(msg);
+    const g = document.getElementById("goNext"); if (g) g.onclick = () => jump(nxt.date);
+  }
+}
+
+function renderMonth() {
+  const y = state.cursor.getFullYear(), m = state.cursor.getMonth();
+  const first = new Date(y, m, 1), last = new Date(y, m + 1, 0);
+  document.getElementById("title").textContent = `${MONTHS[m][0].toUpperCase() + MONTHS[m].slice(1)} ${y}`;
+  const monthDays = []; for (let d = first; d <= last; d = addDays(d, 1)) monthDays.push(d);
+  document.getElementById("count").textContent = lessonSummary(monthDays);
+
+  let h = `<div class="mo">`;
+  ["ma", "di", "wo", "do", "vr", "za", "zo"].forEach(n => h += `<div class="mo-h">${n}</div>`);
+  const start = monday(first);
+  const end = addDays(monday(last), 6);
+  for (let d = start; d <= end; d = addDays(d, 1)) {
+    const wkend = d.getDay() === 0 || d.getDay() === 6;
+    const cls = [
+      d.getMonth() !== m && "other", wkend && "weekend", key(d) === key(TODAY) && "today"
+    ].filter(Boolean).join(" ");
+    const ok = inRange(d);
+    const items = [];
+    marksOn(d).forEach(mk => items.push(`<span class="tag dot ${mk.kind}" title="${mk.label}">${mk.label}</span>`));
+    lessonsOn(d).forEach(({ c, s }) => items.push(`<span class="pill ${c.id}" title="${c.name} ${s.start} tot ${s.end}">${ICONS[c.icon]}<span>${s.start} ${c.short}</span></span>`));
+    const label = `${DAY_LONG[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}${ok ? ", open week" : ", buiten het semester"}`;
+    h += `<button type="button" class="cell ${cls}" data-date="${key(d)}" ${ok ? "" : "disabled"} aria-label="${label}">
+      <span class="n">${d.getDate()}</span>${ok ? items.join("") : ""}</button>`;
+  }
+  h += `</div>`;
+  board.innerHTML = h;
+  board.querySelectorAll(".cell:not(:disabled)").forEach(b => b.onclick = () => jump(D(b.dataset.date), "week"));
+}
+
+function renderCourses() {
+  const el = document.getElementById("courses");
+  el.innerHTML = COURSES.map(c => {
+    let n = 0, mins = 0;
+    for (let d = D(c.from); d <= D(c.to); d = addDays(d, 1)) lessonsOn(d).forEach(x => { if (x.c === c) { n++; mins += toMin(x.s.end) - toMin(x.s.start); } });
+    const a = D(c.from), z = D(c.to);
+    const rows = c.sessions.map(s => `<li><b>${DAY_LONG[s.day]}</b><span>${s.start} tot ${s.end}, ${s.type}</span></li>`).join("");
+    return `<article class="course ${c.id}">
+      <div class="ico">${ICONS[c.icon]}</div>
+      <div>
+        <h3>${c.name}</h3>
+        <p class="when">${c.code}, ${c.period} van ${a.getDate()} ${MONTH_SHORT[a.getMonth()]} tot ${z.getDate()} ${MONTH_SHORT[z.getMonth()]}</p>
+        <ul>${rows}</ul>
+        <p>${n} lessen in totaal, ${fmtHours(mins)}</p>
+      </div>
+    </article>`;
+  }).join("");
+}
+
+/* ---------- render ---------- */
+const prevBtn = document.getElementById("prev"), nextBtn = document.getElementById("next"), homeBtn = document.getElementById("home");
+homeBtn.textContent = TODAY_IN ? "Vandaag" : "Eerste lesweek";
+
+function render(dir = 0) {
+  document.querySelectorAll(".seg button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.view === state.view)));
+  if (state.view === "week") {
+    renderWeek();
+    prevBtn.disabled = monday(state.cursor) <= MIN_WEEK;
+    nextBtn.disabled = monday(state.cursor) >= MAX_WEEK;
+    prevBtn.setAttribute("aria-label", "Vorige week"); nextBtn.setAttribute("aria-label", "Volgende week");
+  } else {
+    renderMonth();
+    prevBtn.disabled = state.cursor.getMonth() <= FIRST_MONTH;
+    nextBtn.disabled = state.cursor.getMonth() >= LAST_MONTH;
+    prevBtn.setAttribute("aria-label", "Vorige maand"); nextBtn.setAttribute("aria-label", "Volgende maand");
+  }
+  placeWindow(dir);
+  save();
+}
+
+document.querySelectorAll(".seg button").forEach(b => b.onclick = () => { state.view = b.dataset.view; render(0); });
+prevBtn.onclick = () => move(-1);
+nextBtn.onclick = () => move(1);
+homeBtn.onclick = () => jump(START_DATE, state.view);
+document.addEventListener("keydown", e => {
+  if (e.target.closest("input, textarea") || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === "ArrowLeft") { e.preventDefault(); move(-1); }
+  else if (e.key === "ArrowRight") { e.preventDefault(); move(1); }
+  else if (e.key.toLowerCase() === "w") { state.view = "week"; render(0); }
+  else if (e.key.toLowerCase() === "m") { state.view = "month"; render(0); }
+});
+
+buildTrack();
+renderCourses();
+render(0);
+</script>
+</body>
+</html>
